@@ -1,443 +1,201 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Secret École Zakaria</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f9f9f9;
-      color: #222;
-    }
-    h1, h2, h3 {
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      max-width: 700px;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-    input[type="number"], input[type="text"], input[type="password"], input[type="time"] {
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-    input[type="number"] {
-      width: 60px;
-    }
-    .notes-container input {
-      width: 50px;
-      margin: 2px;
-    }
-    #resultat, #totaux {
-      text-align: center;
-      max-width: 700px;
-      margin: 10px auto;
-      font-weight: bold;
-    }
-    #resultat {
-      font-size: 1.3em;
-      color: #ff6600;
-    }
-    button {
-      display: block;
-      margin: 15px auto;
-      padding: 10px 25px;
-      background-color: #ff6600;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    button:hover {
-      background-color: #e55b00;
-    }
-    #loginForm {
-      max-width: 400px;
-      margin: 80px auto;
-      background: white;
-      padding: 25px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      border-radius: 8px;
-    }
-    #appContainer {
-      display: none;
-    }
-    #planning div.seance {
-      margin: 6px 0;
-      padding: 6px 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background-color: #f5f5f5;
-      text-align: left;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #planning div.seance button.supprimerBtn {
-      float: right;
-      background-color: #e55b00;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 2px 8px;
-      font-size: 0.9em;
-    }
-    #planning div.seance button.supprimerBtn:hover {
-      background-color: #cc4c00;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FC Légende</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial, Helvetica, sans-serif;background:#f5f5f5;color:#0f1724;}
+header{background:orange;color:white;text-align:center;padding:18px;font-size:28px;font-weight:800;letter-spacing:1px;}
+main{padding:18px;padding-bottom:120px;min-height:100vh;}
+h1{text-align:left;margin:12px 0;font-size:20px;}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;height:70px;display:flex;justify-content:space-around;align-items:center;background:#0a76db;border-top:2px solid #005bb5;z-index:1000}
+.nav-item{flex:1;text-align:center;color:white;font-weight:700;cursor:pointer;padding:10px 6px;font-size:14px}
+.nav-item.active{background:linear-gradient(180deg,#1da3ff,#0077e6);border-radius:8px}
+.panel{display:none}
+.panel.active{display:block}
+/* Cards */
+.card{background:white;border-radius:12px;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px;margin-bottom:12px}
+.news-item img{float:right;margin-left:10px;width:100px;height:auto;border-radius:6px}
+/* Players */
+.players-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.player-card{background:rgba(0,0,0,0.45);color:white;border-radius:14px;padding:12px;text-align:center;position:relative}
+.player-card img{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:8px}
+/* Buteurs */
+table{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden}
+th,td{padding:8px;border:1px solid #ddd;text-align:center}
+th{background:#1da3ff;color:white}
+/* Matches */
+.match-container{max-width:900px;margin:0 auto;display:grid;gap:14px}
+.match-card{background:white;border-radius:12px;padding:12px;box-shadow:0 6px 14px rgba(0,0,0,0.06)}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.icon-soccer{width:36px;height:36px;display:inline-grid;place-items:center;background:#eef2f3;border-radius:8px}
+.match-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.team{display:flex;align-items:center;gap:8px;min-width:0}
+.flag-match{width:42px;height:42px;border-radius:50%;overflow:hidden;background:#eee}
+.flag-match img{width:100%;height:100%;object-fit:cover}
+.team-name-match{font-weight:700;min-width:80px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.score-match{font-weight:800;font-size:18px;min-width:70px;text-align:center}
+.meta{font-size:13px;color:#777;margin-top:8px}
+/* small responsiveness */
+@media (max-width:520px){ header{font-size:20px;padding:12px} .team-name-match{max-width:110px} }
+</style>
 </head>
 <body>
+<header>FC LÉGENDE</header>
 
-<!-- Connexion -->
-<div id="loginForm">
-  <h2>Connexion à Secret École Zakaria</h2>
-  <label>Nom d'utilisateur :</label><br>
-  <input type="text" id="username" placeholder="Nom d'utilisateur" value="Niampa"><br><br>
-  <label>Mot de passe :</label><br>
-  <input type="password" id="password" placeholder="Mot de passe" value="4917"><br><br>
-  <button onclick="connexion()">Se connecter</button>
-</div>
+<main>
+  <!-- ACTUALITÉS -->
+  <section id="panel-actu" class="panel active">
+    <h1>ACTUALITÉS</h1>
+    <div id="newsList"></div>
+  </section>
 
-<!-- Application -->
-<div id="appContainer">
-  <h1>Secret École Zakaria</h1>
+  <!-- PROFIL JOUEURS -->
+  <section id="panel-profil" class="panel">
+    <h1>PROFILS JOUEURS</h1>
+    <div id="playersGrid" class="players-grid"></div>
+  </section>
 
-  <h2>📘 Mon Planning d'Étude</h2>
-  <label>Matière :</label>
-  <select id="matiere">
-    <option>Maths</option>
-    <option>Français</option>
-    <option>Histoire-Géographie</option>
-    <option>Physique-Chimie</option>
-    <option>SVT</option>
-    <option>Anglais</option>
-    <option>Allemand</option>
-  </select>
-  <label>Jour :</label>
-  <select id="jour">
-    <option>Lundi</option>
-    <option>Mardi</option>
-    <option>Mercredi</option>
-    <option>Jeudi</option>
-    <option>Vendredi</option>
-    <option>Samedi</option>
-    <option>Dimanche</option>
-  </select>
-  <label>Heure début :</label>
-  <input type="time" id="heureDebut" />
-  <label>Durée (minutes) :</label>
-  <input type="number" id="duree" min="1" max="480" placeholder="90" />
-  <button onclick="ajouterPlanning()">Ajouter à mon planning</button>
-  <div id="planning">
-    <h3>🗓️ Mes séances :</h3>
-    <div id="liste"></div>
-  </div>
-  <div id="resume">⏳ Temps total d'étude cette semaine : 0 minutes</div>
-
-  <!-- Moyenne -->
-  <h2>📊 Calcul de la Moyenne Générale</h2>
-  <form id="formMoyenne" onsubmit="return false;">
-    <table>
-      <thead>
-        <tr>
-          <th>Matière</th>
-          <th>Coef</th>
-          <th>Nb Ex</th>
-          <th>Notes</th>
-          <th>Moyenne</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-    <div id="totaux">
-      <p>Somme des Coefs : <span id="sommeCoef">0</span></p>
-      <p>Somme des Totaux : <span id="sommeTotaux">0</span></p>
+  <!-- BUTEURS -->
+  <section id="panel-buteurs" class="panel">
+    <h1>BUTEURS</h1>
+    <div class="card">
+      <table id="buteursTable">
+        <thead><tr><th>Joueur</th><th>Buts</th></tr></thead>
+        <tbody id="buteursBody"></tbody>
+      </table>
     </div>
-    <button onclick="calculerMoyenne()">Calculer la moyenne</button>
-  </form>
-  <div id="resultat"></div>
-</div>
+  </section>
 
-<!-- Sons -->
-<audio id="sonDebut" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
-<audio id="sonFin" src="https://www.soundjay.com/button/beep-07.mp3" preload="auto"></audio>
+  <!-- MATCHS RÉCENTS -->
+  <section id="panel-matchs" class="panel">
+    <h1>MATCHS RÉCENTS</h1>
+    <div class="match-container" id="cardsContainer"></div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <div class="nav-item active" data-target="panel-actu">Actu</div>
+  <div class="nav-item" data-target="panel-profil">Profil</div>
+  <div class="nav-item" data-target="panel-buteurs">Buteurs</div>
+  <div class="nav-item" data-target="panel-matchs">Matchs</div>
+</nav>
 
 <script>
-  // --- Variables globales ---
-  const STORAGE_PLANNING_KEY = "secretEcoleZakaria_planning";
-  const STORAGE_NOTES_KEY = "secretEcoleZakaria_notes";
-
-  // --- Connexion ---
-  function connexion() {
-    const user = document.getElementById("username").value.trim();
-    const pass = document.getElementById("password").value.trim();
-    if (user === "Niampa" && pass === "4917") {
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("appContainer").style.display = "block";
-      chargerPlanning();
-      chargerNotes();
-    } else {
-      alert("Nom d'utilisateur ou mot de passe incorrect.");
-    }
-  }
-
-  // --- Planning ---
-  let planning = [];
-
-  function timeToMinutes(t) {
-    const [h, m] = t.split(":").map(Number);
-    return h * 60 + m;
-  }
-  function minutesToTime(mins) {
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-  }
-
-  // Affiche le planning dans #liste avec bouton supprimer
-  function afficherPlanning() {
-    const liste = document.getElementById('liste');
-    liste.innerHTML = "";
-    planning.forEach((seance, index) => {
-      const div = document.createElement("div");
-      div.className = "seance";
-      div.textContent = `📘 ${seance.matiere} - 🗓️ ${seance.jour} de ${seance.heureDebut} à ${seance.heureFin} (${seance.duree} min)`;
-
-      // Bouton supprimer à côté
-      const btnSuppr = document.createElement("button");
-      btnSuppr.textContent = "Supprimer";
-      btnSuppr.className = "supprimerBtn";
-      btnSuppr.onclick = () => {
-        // Supprime la séance sans réduire le temps total
-        planning.splice(index, 1);
-        sauvegarderPlanning();
-        afficherPlanning();
-        // Ne pas appeler miseAJourResume() pour garder le total intact
-      };
-      div.appendChild(btnSuppr);
-
-      liste.appendChild(div);
-    });
-  }
-
-  // Met à jour le total des minutes (somme des durées au moment de l'ajout)
-  // Pour respecter la demande, on n'appelle plus cette fonction lors d'une suppression
-  let totalMinutes = 0;
-  function miseAJourResume() {
-    // Recalcule total uniquement quand on ajoute (pas quand on supprime)
-    totalMinutes = planning.reduce((s, e) => s + e.duree, 0);
-    document.getElementById("resume").textContent = `⏳ Temps total d'étude cette semaine : ${totalMinutes} minutes`;
-  }
-
-  // Sauvegarde planning dans localStorage
-  function sauvegarderPlanning() {
-    localStorage.setItem(STORAGE_PLANNING_KEY, JSON.stringify(planning));
-  }
-
-  // Charge planning depuis localStorage
-  function chargerPlanning() {
-    const data = localStorage.getItem(STORAGE_PLANNING_KEY);
-    if (data) {
-      try {
-        planning = JSON.parse(data);
-      } catch {
-        planning = [];
-      }
-    } else {
-      planning = [];
-    }
-    afficherPlanning();
-    // Ne pas remettre à jour le total ici pour garder le total intact après suppression
-    if (totalMinutes === 0) {
-      // Au premier chargement, on calcule totalMinutes normalement
-      totalMinutes = planning.reduce((s, e) => s + e.duree, 0);
-    }
-    document.getElementById("resume").textContent = `⏳ Temps total d'étude cette semaine : ${totalMinutes} minutes`;
-  }
-
-  // Ajouter une séance au planning
-  function ajouterPlanning() {
-    const matiere = document.getElementById('matiere').value;
-    const jour = document.getElementById('jour').value;
-    const heureDebut = document.getElementById('heureDebut').value;
-    const duree = parseInt(document.getElementById('duree').value);
-    if (!heureDebut || isNaN(duree) || duree <= 0) {
-      alert("Entrez une heure et une durée valides.");
-      return;
-    }
-    const debutMin = timeToMinutes(heureDebut);
-    const finMin = debutMin + duree;
-    if (finMin > 1440) {
-      alert("Durée trop longue !");
-      return;
-    }
-    const heureFin = minutesToTime(finMin);
-    // Ajout au planning
-    planning.push({ matiere, jour, heureDebut, heureFin, duree });
-    sauvegarderPlanning();
-    afficherPlanning();
-    // Ajout au totalMinutes mais on garde le total affiché tel quel (par ta demande)
-    totalMinutes += duree;
-    document.getElementById("resume").textContent = `⏳ Temps total d'étude cette semaine : ${totalMinutes} minutes`;
-    document.getElementById('sonDebut').play();
-  }
-
-  // --- Notifications de début/fin séances ---
-  setInterval(() => {
-    const now = new Date();
-    const jours = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
-    const j = jours[now.getDay()];
-    const h = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-    planning.forEach(seance => {
-      if (seance.jour === j) {
-        if (seance.heureDebut === h) {
-          document.getElementById("sonDebut").play();
-          alert("🔔 Début de " + seance.matiere);
-        }
-        if (seance.heureFin === h) {
-          document.getElementById("sonFin").play();
-          alert("✅ Fin de " + seance.matiere);
-        }
-      }
-    });
-  }, 60000);
-
-  // --- Moyennes et Notes ---
-  const matieres = ["Maths", "Français", "Histoire-Géographie", "Physique-Chimie", "SVT", "Anglais", "Allemand"];
-  const tableBody = document.getElementById("tableBody");
-
-  // Créer tableau au chargement (avant connexion)
-  matieres.forEach((m, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${m}</td>
-      <td><input type="number" min="1" value="1" id="coef-${i}"></td>
-      <td><input type="number" min="0" value="0" id="nbEx-${i}" onchange="genererInputsNotes(${i})"></td>
-      <td><div class="notes-container" id="notes-${i}"></div></td>
-      <td><span id="moyenne-${i}">0</span></td>
-      <td><span id="total-${i}">0</span></td>
-    `;
-    tableBody.appendChild(tr);
+/* ------------------ Navigation ------------------ */
+const navItems = document.querySelectorAll('.nav-item');
+const panels = document.querySelectorAll('.panel');
+navItems.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    panels.forEach(p=>p.classList.remove('active'));
+    document.getElementById(btn.dataset.target).classList.add('active');
+    navItems.forEach(n=>n.classList.toggle('active', n===btn));
   });
+});
 
-  // Génère les inputs notes selon le nb d'exos
-  function genererInputsNotes(index) {
-    const nb = parseInt(document.getElementById(`nbEx-${index}`).value);
-    const container = document.getElementById(`notes-${index}`);
-    container.innerHTML = "";
-    for (let i = 0; i < nb; i++) {
-      const input = document.createElement("input");
-      input.type = "number";
-      input.min = 0;
-      input.max = 20;
-      input.placeholder = `Note ${i+1}`;
-      input.oninput = () => {
-        calculerMoyennePartielle(index);
-        sauvegarderNotes();
-      };
-      input.id = `note-${index}-${i}`;
-      container.appendChild(input);
-    }
-  }
+/* ------------------ NEWS ------------------ */
+let news = JSON.parse(localStorage.getItem('news')) || [];
+const newsList = document.getElementById('newsList');
 
-  // Calcule moyenne partielle par matière
-  function calculerMoyennePartielle(index) {
-    const nb = parseInt(document.getElementById(`nbEx-${index}`).value);
-    let total = 0, valid = 0;
-    for (let i = 0; i < nb; i++) {
-      const val = parseFloat(document.getElementById(`note-${index}-${i}`)?.value);
-      if (!isNaN(val)) {
-        total += val;
-        valid++;
-      }
-    }
-    const moy = valid ? total / valid : 0;
-    const coef = parseFloat(document.getElementById(`coef-${index}`).value);
-    const totalCoef = moy * coef;
-    document.getElementById(`moyenne-${index}`).textContent = moy.toFixed(2);
-    document.getElementById(`total-${index}`).textContent = totalCoef.toFixed(2);
-  }
+// Fonction pour ajouter une actualité
+function addNews(newItem){
+  let news = JSON.parse(localStorage.getItem('news')) || [];
+  news.push(newItem);                      
+  localStorage.setItem('news', JSON.stringify(news));
+  renderNews();
+}
 
-  // Calcule la moyenne générale
-  function calculerMoyenne() {
-    let sc = 0, st = 0;
-    matieres.forEach((_, i) => {
-      const coef = parseFloat(document.getElementById(`coef-${i}`).value);
-      const total = parseFloat(document.getElementById(`total-${i}`).textContent);
-      if (!isNaN(coef) && coef > 0) {
-        sc += coef;
-        st += total;
-      }
-    });
-    const moyGen = sc ? (st / sc).toFixed(2) : 0;
-    document.getElementById("sommeCoef").textContent = sc.toFixed(2);
-    document.getElementById("sommeTotaux").textContent = st.toFixed(2);
-    document.getElementById("resultat").textContent = `Moyenne Générale Pondérée : ${moyGen} / 20`;
-    sauvegarderNotes();
-  }
-
-  // --- Sauvegarde des notes/coefs dans localStorage ---
-  function sauvegarderNotes() {
-    const data = matieres.map((_, i) => {
-      const coef = parseFloat(document.getElementById(`coef-${i}`).value) || 1;
-      const nbEx = parseInt(document.getElementById(`nbEx-${i}`).value) || 0;
-      const notes = [];
-      for(let j=0; j<nbEx; j++) {
-        const val = parseFloat(document.getElementById(`note-${i}-${j}`)?.value);
-        notes.push(isNaN(val) ? null : val);
-      }
-      return { coef, nbEx, notes };
-    });
-    localStorage.setItem(STORAGE_NOTES_KEY, JSON.stringify(data));
-  }
-
-  function chargerNotes() {
-    const dataRaw = localStorage.getItem(STORAGE_NOTES_KEY);
-    if (!dataRaw) return;
-    try {
-      const data = JSON.parse(dataRaw);
-      data.forEach((item, i) => {
-        if(i >= matieres.length) return;
-        document.getElementById(`coef-${i}`).value = item.coef ?? 1;
-        document.getElementById(`nbEx-${i}`).value = item.nbEx ?? 0;
-        genererInputsNotes(i);
-        if(item.notes && Array.isArray(item.notes)) {
-          item.notes.forEach((n, j) => {
-            const input = document.getElementById(`note-${i}-${j}`);
-            if(input && n !== null) input.value = n;
-          });
-        }
-        calculerMoyennePartielle(i);
-      });
-      calculerMoyenne();
-    } catch {}
-  }
-
-  // Sauvegarder automatiquement quand on change coef ou nbEx
-  matieres.forEach((_, i) => {
-    document.addEventListener("input", (e) => {
-      if(e.target.id === `coef-${i}` || e.target.id === `nbEx-${i}`) {
-        if(e.target.id === `nbEx-${i}`) genererInputsNotes(i);
-        calculerMoyenne();
-      }
-    });
+// Affichage des actualités
+function renderNews(){
+  newsList.innerHTML = '';
+  [...news].reverse().forEach(n=>{
+    const div = document.createElement('div');
+    div.className = 'card news-item';
+    div.innerHTML = `${n.image ? `<img src="${n.image}" alt="image">` : ''}
+      <div>
+        <div style="font-size:12px;color:#666">${escapeHtml(n.source||'')}</div>
+        <div style="font-weight:800;font-size:16px;margin-top:6px">${escapeHtml(n.title||'')}</div>
+        <div style="margin-top:6px">${escapeHtml(n.description||'')}</div>
+        <div style="font-size:12px;color:#888;margin-top:8px">${escapeHtml(n.time||'')}</div>
+      </div>`;
+    newsList.appendChild(div);
   });
+}
+
+/* ------------------ PLAYERS ------------------ */
+let players = JSON.parse(localStorage.getItem('players')) || [
+  {name:"Unai Simon", club:"Athletic Bilbao · GK", country:"Espagne", age:28, img:"https://upload.wikimedia.org/wikipedia/commons/7/7b/Unai_Sim%C3%B3n_%28cropped%29.jpg"},
+  {name:"Kylian Mbappé", club:"Paris SG · Attaquant", country:"France", age:26, img:"https://upload.wikimedia.org/wikipedia/commons/c/c3/Kylian_Mbapp%C3%A9_2022.jpg"},
+  {name:"Lionel Messi", club:"Inter Miami · Attaquant", country:"Argentine", age:36, img:"https://upload.wikimedia.org/wikipedia/commons/8/8c/Lionel_Messi_20180626.jpg"},
+  {name:"Neymar", club:"Al-Hilal · Attaquant", country:"Brésil", age:31, img:"https://upload.wikimedia.org/wikipedia/commons/2/2e/Neymar_2018.jpg"},
+  {name:"Luka Modric", club:"Real Madrid · Milieu", country:"Croatie", age:38, img:"https://upload.wikimedia.org/wikipedia/commons/0/03/Luka_Modric_2018.jpg"},
+  {name:"Mohamed Salah", club:"Liverpool · Attaquant", country:"Egypte", age:31, img:"https://upload.wikimedia.org/wikipedia/commons/0/09/Mohamed_Salah_2018.jpg"}
+];
+const playersGrid = document.getElementById('playersGrid');
+function renderPlayers(){
+  playersGrid.innerHTML = '';
+  players.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='player-card card';
+    card.innerHTML = `<img src="${p.img}" alt="img">
+      <div class="player-name">${escapeHtml(p.name)}</div>
+      <div class="player-club" style="font-size:13px;color:#ddd;margin-top:6px">${escapeHtml(p.club)}</div>
+      <div class="player-country" style="font-size:13px;color:#ddd;margin-top:6px">${escapeHtml(p.country)}</div>
+      <div class="player-age" style="font-size:13px;color:#ddd;margin-top:6px">Âge : ${escapeHtml(String(p.age))}</div>`;
+    playersGrid.appendChild(card);
+  });
+}
+
+/* ------------------ BUTEURS ------------------ */
+let buteurs = JSON.parse(localStorage.getItem('buteurs')) || [
+  {name:'Mbappé', goals:0},
+  {name:'Messi', goals:0},
+  {name:'Ronaldo', goals:0},
+  {name:'Neymar', goals:0},
+  {name:'Modric', goals:0},
+  {name:'Salah', goals:0}
+];
+const buteursBody = document.getElementById('buteursBody');
+function renderButeurs(){
+  buteursBody.innerHTML='';
+  buteurs.forEach(b=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${escapeHtml(b.name)}</td><td>${b.goals}</td>`;
+    buteursBody.appendChild(tr);
+  });
+}
+
+/* ------------------ MATCHS ------------------ */
+let matchs = JSON.parse(localStorage.getItem('matchsRecent')) || [];
+const container = document.getElementById('cardsContainer');
+function renderMatchs(){
+  container.innerHTML='';
+  matchs.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='match-card card';
+    div.innerHTML=`<div class="card-header"><div class="icon-soccer">⚽</div><div>Match récent</div></div>
+      <div class="match-row">
+        <div class="team"><div class="flag-match"><img src="${m.logoA||''}" alt="logo A"></div><div class="team-name-match">${escapeHtml(m.teamA||'Équipe A')}</div></div>
+        <div class="score-match">${m.score||'0 : 0'}</div>
+        <div class="team" style="justify-content:flex-end"><div class="team-name-match">${escapeHtml(m.teamB||'Équipe B')}</div><div class="flag-match"><img src="${m.logoB||''}" alt="logo B"></div></div>
+      </div>
+      <div class="meta">${escapeHtml(m.meta||'Infos du match…')}</div>`;
+    container.appendChild(div);
+  });
+}
+
+/* ------------------ Helpers & Init ------------------ */
+function escapeHtml(s){ return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function init(){
+  renderNews();
+  renderPlayers();
+  renderButeurs();
+  renderMatchs();
+}
+init();
 </script>
 </body>
 </html>
